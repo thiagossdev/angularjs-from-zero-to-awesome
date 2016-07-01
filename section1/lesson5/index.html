@@ -19,26 +19,43 @@
 
 <div class="container main-content" ng-controller="MinMaxCtrl" >
 
-	<form name="theForm" ng-submit="onSubmit()" >
+	<form ng-submit="onSubmit(theForm.$valid)"
+          name="theForm"
+		  novalidate="novalidate">
 		<div class="form-group" >
-			<label for="name" >Name</label >
+			<label for="name" class="control-label">Name</label >
 			<input type="text"
 			       class="form-control"
 			       ng-model="formModel.name"
 			       id="name" >
 		</div >
 
-		<div class="form-group" >
-			<label for="email" >Email</label >
+		<div class="form-group" ng-class="
+		    {
+		        'has-error': !theForm.email.$valid && (!theForm.$pristine || theForm.$submitted),
+		        'has-success': theForm.email.$valid && (!theForm.$pristine || theForm.$submitted)
+            }
+		">
+			<label for="email" class="control-label">Email</label >
 			<input type="email"
 			       class="form-control"
 			       ng-model="formModel.email"
 			       id="email"
 			       name="email"
 			       required="required" >
+            <p class="help-block" ng-show="theForm.email.$error.required && (!theForm.$pristine || theForm.$submitted)">
+                This field is required
+            </p>
+            <p class="help-block" ng-show="theForm.email.$error.email && (!theForm.$pristine || theForm.$submitted)">
+                Please enter a email valid
+            </p>
+            <!--<pre>Validation {{ theForm.email.$error | json }}</pre>-->
+            <!--<pre>Field Valid? {{ theForm.email.$valid }}</pre>-->
+            <!--<pre>Form Pristine? {{ theForm.$pristine }}</pre>-->
+            <!--<pre>Form Submitted? {{ theForm.$submitted }}</pre>-->
 		</div >
 
-		<div class="form-group" >
+		<div class="form-group" class="control-label">
 			<label for="username" >Username</label >
 			<input type="text"
 			       class="form-control"
@@ -47,7 +64,7 @@
 		</div >
 
 		<div class="form-group" >
-			<label for="age" >Age</label >
+			<label for="age" class="control-label">Age</label >
 			<input type="number"
 			       class="form-control"
 			       ng-model="formModel.age"
@@ -55,7 +72,7 @@
 		</div >
 
 		<div class="form-group" >
-			<label for="sex" >Sex</label >
+			<label for="sex" class="control-label">Sex</label >
 			<select name="sex"
 			        id="sex"
 			        class="form-control"
@@ -67,7 +84,7 @@
 		</div >
 
 		<div class="form-group" >
-			<label for="password" >Password</label >
+			<label for="password" class="control-label">Password</label >
 			<input type="password"
 			       class="form-control"
 			       ng-model="formModel.password"
@@ -82,7 +99,7 @@
 
 	</form >
 
-	<pre>{{ formModel | json }}</pre>
+	<pre>{{ theForm | json }}</pre>
 
 </div >
 
