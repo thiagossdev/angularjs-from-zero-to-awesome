@@ -1,25 +1,25 @@
 var app = angular.module('codecraft', [
-	'ngResource', 'infinite-scroll'
+    'ngResource', 'infinite-scroll'
 ]);
 
-app.config(function($httpProvider, $resourceProvider) {
+app.config(function ($httpProvider, $resourceProvider) {
     $httpProvider.defaults.headers.common['Authorization'] = 'Token 82bc459336766cd7d2658f87b74557e93278a844';
     $resourceProvider.defaults.stripTrailingSlashes = false;
 });
 
 app.factory('Contact', function ($resource) {
-   return $resource('https://codecraftpro.com/api/samples/v1/contact/:id/');
+    return $resource('https://codecraftpro.com/api/samples/v1/contact/:id/');
 });
 
 app.controller('PersonDetailController', function ($scope, ContactService) {
-	$scope.contacts = ContactService;
+    $scope.contacts = ContactService;
 });
 
 app.controller('PersonListController', function ($scope, ContactService) {
 
-	$scope.search = "";
-	$scope.order = "email";
-	$scope.contacts = ContactService;
+    $scope.search = "";
+    $scope.order = "email";
+    $scope.contacts = ContactService;
 
     $scope.loadMore = function () {
         console.log('Load More!');
@@ -27,25 +27,51 @@ app.controller('PersonListController', function ($scope, ContactService) {
     };
 
     $scope.$watch('search', function (newVal, oldVal) {
-        console.log(newVal);
+        if(angular.isDefined(newVal)) {
+            $scope.contacts.doSearch(newVal);
+        }
+    });
+
+    $scope.$watch('order', function (newVal, oldVal) {
+        if(angular.isDefined(newVal)) {
+            $scope.contacts.doOrder(newVal);
+        }
     });
 });
 
 app.service('ContactService', function (Contact) {
-	var self = {
-		'addPerson': function (person) {
-			this.persons.push(person);
-		},
+    var self = {
+        'addPerson': function (person) {
+            this.persons.push(person);
+        },
         'page': 1,
         'hasMore': true,
         'isLoading': false,
-		'selectedPerson': null,
-		'persons': [],
+        'selectedPerson': null,
+        'persons': [],
+        'search': null,
+        'ordering': null,
+        'doSearch': function (search) {
+            self.hasMore = true;
+            self.page = 1;
+            self.persons = [];
+            self.search = search;
+            self.loadContacts();
+        },
+        'doOrder': function (ordering) {
+            self.hasMore = true;
+            self.page = 1;
+            self.persons = [];
+            self.ordering = ordering;
+            self.loadContacts();
+        },
         'loadContacts': function () {
             if (self.hasMore && !self.isLoading) {
                 self.isLoading = true;
                 var params = {
-                    'page': self.page
+                    'page': self.page,
+                    'search': self.search,
+                    'ordering': self.ordering
                 };
                 Contact.get(params, function (data) {
                     console.log(data);
@@ -66,9 +92,9 @@ app.service('ContactService', function (Contact) {
                 self.loadContacts();
             }
         }
-	};
+    };
 
-	self.loadContacts();
+    self.loadContacts();
 
-	return self;
+    return self;
 });
