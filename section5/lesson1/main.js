@@ -4,19 +4,19 @@ app.controller('PersonDetailController', function ($scope) {
 
 });
 
-app.controller('PersonListController', function ($scope) {
+app.controller('PersonListController', function ($scope, $rootScope) {
 
     $scope.search = "";
     $scope.order = "email";
     $scope.selectedIndex = null;
-    $scope.selectedPerson = null;
+    $rootScope.selectedPerson = null;
 
     $scope.selectPerson = function (person, index) {
         $scope.selectedIndex = index;
-        $scope.selectedPerson = person;
+        $rootScope.selectedPerson = person;
     };
 
-    $scope.sensitiveSearch = function(person) {
+    $scope.sensitiveSearch = function (person) {
         if ($scope.search) {
             return person.name.indexOf($scope.search) == 0 ||
                 person.email.indexOf($scope.search) == 0;
