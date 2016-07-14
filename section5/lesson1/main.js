@@ -4,7 +4,7 @@ app.controller('PersonDetailController', function ($scope) {
 
 });
 
-app.controller('PersonListController', function ($scope, $rootScope) {
+app.controller('PersonListController', function ($scope, $http) {
 
     $scope.search = "";
     $scope.order = "email";
