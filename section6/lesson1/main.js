@@ -45,7 +45,7 @@ app.controller('PersonListController', function ($scope, $modal, ContactService)
         console.log('Load More!');
         $scope.contacts.loadMore();
     };
-    
+
     $scope.showCreateModal = function () {
         $scope.createModal = $modal({
             scope: $scope,
